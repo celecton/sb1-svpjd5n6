@@ -33,10 +33,9 @@ export function renderConferente(db) {
 
     let notasHTML = filteredNotas.map(nota => `
       <li class="${nota.perecivel === 'Sim' ? 'priority' : ''}">
-        <strong>Número da Nota:</strong> ${nota.numeroNota},
-        <strong>Nome da Empresa:</strong> ${nota.nomeEmpresa},
-        <strong>Motorista:</strong> ${motoristaNome},
-        <strong>Telefone:</strong> ${motoristaTelefone}
+        <strong>Número da Nota:</strong> ${nota.numeroNota}, 
+        <strong>Nome da Empresa:</strong> ${nota.nomeEmpresa}, 
+        <strong>CNPJ:</strong> ${nota.cnpj || 'N/A'}
         <button onclick="visualizarNota('${nota.id}')">Visualizar</button>
       </li>
     `).join('');

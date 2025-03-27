@@ -25,7 +25,9 @@ export function renderChefe(db) {
 
         return `
           <tr>
-            <td>${nota.id}</td>
+            <td>${nota.numeroNota}</td>
+            <td>${nota.nomeEmpresa}</td>
+            <td>${nota.cnpj || 'N/A'}</td>
             <td>
               <select onchange="alterarLojaDestino('${nota.id}', this.value)">
                 <option value="${nota.empresaDestino}" selected>${nota.empresaDestino}</option>
@@ -35,7 +37,6 @@ export function renderChefe(db) {
                 <option value="Loja 04 JD Triangulo">Loja 04 JD Triangulo</option>
               </select>
             </td>
-            <td>${nota.numeroNota}</td>
             <td>${nota.status}</td>
             <td>${new Date(nota.timestampCadastro).toLocaleString()}</td>
             <td>${nota.timestampFinalizacao ? new Date(nota.timestampFinalizacao).toLocaleString() : 'Pendente'}</td>
@@ -74,9 +75,10 @@ export function renderChefe(db) {
     <table>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Loja</th>
           <th>Número da Nota</th>
+          <th>Nome da Empresa</th>
+          <th>CNPJ</th>
+          <th>Loja</th>
           <th>Status</th>
           <th>Data de Cadastro</th>
           <th>Data de Finalização</th>
