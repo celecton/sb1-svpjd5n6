@@ -26,9 +26,9 @@ export function renderCPD(db) {
 
     let notasHTML = filteredNotas.map(nota => `
       <li class="${nota.perecivel === 'Sim' ? 'priority' : ''}">
-        <strong>Loja:</strong> ${nota.empresaDestino}, 
-        <strong>Nota:</strong> ${nota.numeroNota}, 
-        <strong>Status:</strong> ${nota.status}
+        <strong>Número da Nota:</strong> ${nota.numeroNota}, 
+        <strong>Nome da Empresa:</strong> ${nota.nomeEmpresa}, 
+        <strong>CNPJ:</strong> ${nota.cnpj || 'N/A'}
         <button onclick="visualizarNota('${nota.id}')">Visualizar</button>
         ${nota.status === 'Rejeitada - CPD' ? 
           `<button onclick="finalizarNotaRejeitada('${nota.id}')" style="margin-left: 10px;">Finalizar Nota</button>` : 
