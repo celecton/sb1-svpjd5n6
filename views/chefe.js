@@ -8,15 +8,18 @@ export function renderChefe(db) {
   const renderTable = async (status = 'all') => {
     const notas = await db.getAllNotas();
     let filteredNotas = notas;
+    const lojaFilter = document.getElementById('lojaFilter').value;
 
-    if (status !== 'all') {
-      filteredNotas = notas.filter(nota => {
-        if (status === 'aberto') return nota.status.includes('Em Aberto');
-        if (status === 'rejeitado') return nota.status.includes('Rejeitada');
-        if (status === 'finalizado') return nota.status === 'Finalizada';
-        return true;
-      });
-    }
+    filteredNotas = notas.filter(nota => {
+      const matchesStatus = status === 'all' || 
+        (status === 'aberto' && nota.status.includes('Em Aberto')) ||
+        (status === 'rejeitado' && nota.status.includes('Rejeitada')) ||
+        (status === 'finalizado' && nota.status === 'Finalizada');
+      
+      const matchesLoja = lojaFilter === 'all' || nota.empresaDestino === lojaFilter;
+      
+      return matchesStatus && matchesLoja;
+    });
 
     Promise.all(filteredNotas.map(async nota => {
       try {
@@ -54,7 +57,14 @@ export function renderChefe(db) {
       </div>
       <button onclick="window.location.href='/'" style="height: 40px; padding: 0 20px; cursor: pointer;">Voltar para Login</button>
     </div>
-    <div class="filter-container">
+    <div class="filter-container" style="display: flex; gap: 10px; align-items: center;">
+      <select id="lojaFilter" style="padding: 5px;">
+        <option value="all">Todas as Lojas</option>
+        <option value="Loja 01 ST Sul">Loja 01 ST Sul</option>
+        <option value="Loja 02 Vila Verde">Loja 02 Vila Verde</option>
+        <option value="Loja 03 Formosinha">Loja 03 Formosinha</option>
+        <option value="Loja 04 JD Triangulo">Loja 04 JD Triangulo</option>
+      </select>
       <select id="statusFilter">
         <option value="all">Todas as Notas</option>
         <option value="aberto">Notas Em Aberto</option>
