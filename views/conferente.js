@@ -17,11 +17,12 @@ export function renderConferente(db) {
         return true;
       });
     } else {
-        filteredNotas = notas.filter(nota => 
-          nota.status === "Em Aberto - Conferente" || 
-          nota.status.includes("Rejeitada - CPD") ||
-          nota.status === "Finalizada"
-        );
+      //Corrected filtering to include all relevant statuses
+      filteredNotas = notas.filter(nota => 
+        nota.status === "Em Aberto - Conferente" || 
+        nota.status.includes("Rejeitada") ||
+        nota.status === "Finalizada"
+      );
     }
 
     filteredNotas.sort((a, b) => {
