@@ -31,14 +31,23 @@ export function renderConferente(db) {
       return 0;
     });
 
-    let notasHTML = filteredNotas.map(nota => `
-      <li class="${nota.perecivel === 'Sim' ? 'priority' : ''}">
-        <strong>Número da Nota:</strong> ${nota.numeroNota}, 
-        <strong>Nome da Empresa:</strong> ${nota.nomeEmpresa}, 
-        <strong>CNPJ:</strong> ${nota.cnpj || 'N/A'}
-        <button onclick="visualizarNota('${nota.id}')">Visualizar</button>
-      </li>
-    `).join('');
+    let notasHTML = await Promise.all(filteredNotas.map(async nota => {
+      const motorista = await db.findUserByCPF(nota.cpf);
+      const motoristaNome = motorista ? motorista.nome : 'N/A';
+      const motoristaTelefone = motorista ? motorista.telefone : 'N/A';
+      
+      return `
+        <li class="${nota.perecivel === 'Sim' ? 'priority' : ''}">
+          <strong>Número da Nota:</strong> ${nota.numeroNota}, 
+          <strong>Nome da Empresa:</strong> ${nota.nomeEmpresa},
+          <strong>Nome do Motorista:</strong> ${motoristaNome},
+          <strong>Telefone do Motorista:</strong> ${motoristaTelefone}
+          <button onclick="visualizarNota('${nota.id}')">Visualizar</button>
+        </li>
+      `;
+    }));
+    
+    document.getElementById('listaNotas').innerHTML = notasHTML.join('');
 
     document.getElementById('listaNotas').innerHTML = notasHTML.length ? 
       notasHTML : '<li>Não há notas pendentes no momento.</li>';
