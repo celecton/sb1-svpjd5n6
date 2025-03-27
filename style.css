@@ -144,3 +144,21 @@ img {
   border: 1px solid #ddd;
   border-radius: 4px;
 }
+
+.nota-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+.nota-details {
+  border-top: 1px solid #eee;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.nota-details img {
+  max-width: 150px;
+  margin: 5px;
+}

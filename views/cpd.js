@@ -33,6 +33,7 @@ export function renderCPD(db) {
         ${nota.status === 'Rejeitada - CPD' ? 
           `<button onclick="finalizarNotaRejeitada('${nota.id}')" style="margin-left: 10px;">Finalizar Nota</button>` : 
           ''}
+        <div id="visualizacao-${nota.id}" class="nota-details" style="display: none;"></div>
       </li>
     `).join('');
 
@@ -58,7 +59,6 @@ export function renderCPD(db) {
       <button onclick="applyFilter()">Filtrar</button>
     </div>
     <ul id="listaNotas"></ul>
-    <div id="visualizacaoNota"></div>
   `;
 
   window.applyFilter = () => {
@@ -97,8 +97,15 @@ export function renderCPD(db) {
     const nota = await db.getNota(notaId);
     if (nota) {
       let fotosHTML = nota.fotosBase64.map(foto => `<img src="${foto}" style="max-width:200px; max-height:200px;">`).join('');
+      const detailsDiv = document.getElementById(`visualizacao-${notaId}`);
+      const allDetails = document.querySelectorAll('.nota-details');
+      allDetails.forEach(detail => {
+        if (detail !== detailsDiv) detail.style.display = 'none';
+      });
 
-      document.getElementById('visualizacaoNota').innerHTML = `
+      detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
+      if (detailsDiv.style.display === 'block') {
+        detailsDiv.innerHTML = `
         <h3>Visualização da Nota Fiscal</h3>
         ${fotosHTML}
         <p><strong>Data de Cadastro:</strong> ${new Date(nota.timestampCadastro).toLocaleString()}</p>
@@ -123,8 +130,9 @@ export function renderCPD(db) {
           <button onclick="atualizarStatusNota('${nota.id}')">Atualizar Status</button>
         </div>
       `;
+      }
     } else {
-      document.getElementById('visualizacaoNota').innerHTML = `<p>Nota não encontrada.</p>`;
+      document.getElementById(`visualizacao-${notaId}`).innerHTML = `<p>Nota não encontrada.</p>`;
     }
   };
 
