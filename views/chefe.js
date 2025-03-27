@@ -12,7 +12,7 @@ export function renderChefe(db) {
     if (status !== 'all') {
       filteredNotas = notas.filter(nota => {
         if (status === 'aberto') return nota.status.includes('Em Aberto');
-        if (status === 'rejeitado') return nota.status === 'Rejeitada - CPD';
+        if (status === 'rejeitado') return nota.status.includes('Rejeitada');
         if (status === 'finalizado') return nota.status === 'Finalizada';
         return true;
       });
