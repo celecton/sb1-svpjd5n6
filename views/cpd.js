@@ -8,9 +8,27 @@ export function renderCPD(db) {
   db.prioritizeNotasPereciveis().then(() => {
     Promise.all([
       db.getNotasByStatus('Em Aberto - Motorista'),
-      db.getNotasByStatus('Rejeitada - CPD')
-    ]).then(([notasEmAberto, notasRejeitadas]) => {
-      const notas = [...notasEmAberto, ...notasRejeitadas];
+      db.getNotasByStatus('Rejeitada - CPD'),
+      db.getNotasByStatus('Finalizada')
+    ]).then(([notasEmAberto, notasRejeitadas, notasFinalizadas]) => {
+      const allNotas = [...notasEmAberto, ...notasRejeitadas, ...notasFinalizadas];
+      let notas = allNotas;
+      
+      const filterNotas = (status) => {
+        if (status === 'todas') {
+          notas = allNotas;
+        } else {
+          notas = allNotas.filter(nota => {
+            if (status === 'em_aberto') return nota.status === 'Em Aberto - Motorista';
+            if (status === 'rejeitadas') return nota.status === 'Rejeitada - CPD';
+            if (status === 'finalizadas') return nota.status === 'Finalizada';
+            return true;
+          });
+        }
+        renderNotas();
+      };
+
+      const renderNotas = () => {
       
       notas.sort((a, b) => {
         if (a.perecivel === 'Sim' && b.perecivel !== 'Sim') return -1;
@@ -35,6 +53,12 @@ export function renderCPD(db) {
           <div>
             <h2>Bem-vindo, ${userName}! (${userFuncao})</h2>
             <h2>CPD - Notas Fiscais para Coleta</h2>
+            <div class="filter-buttons">
+              <button onclick="window.filterNotas('todas')">Todas as Notas</button>
+              <button onclick="window.filterNotas('em_aberto')">Notas em Aberto</button>
+              <button onclick="window.filterNotas('rejeitadas')">Notas Rejeitadas</button>
+              <button onclick="window.filterNotas('finalizadas')">Notas Finalizadas</button>
+            </div>
           </div>
           <button onclick="navigateTo('/login')" style="height: 40px; padding: 0 20px;">Voltar para Login</button>
         </div>

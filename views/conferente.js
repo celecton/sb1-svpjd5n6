@@ -5,9 +5,30 @@ export function renderConferente(db) {
   const userName = window.currentUser ? window.currentUser.nome : 'Usuário';
   const userFuncao = window.currentUser ? window.currentUser.funcao : 'Conferente';
 
-  db.getNotasByStatus('Em Aberto - Conferente').then(notas => {
-    // Sort the notes array to prioritize perecivel === 'Sim'
-    notas.sort((a, b) => {
+  Promise.all([
+    db.getNotasByStatus('Em Aberto - Conferente'),
+    db.getNotasByStatus('Finalizada'),
+    db.getNotasByStatus('Rejeitada - CPD')
+  ]).then(([notasEmAberto, notasFinalizadas, notasRejeitadas]) => {
+    const allNotas = [...notasEmAberto, ...notasFinalizadas, ...notasRejeitadas];
+    let notas = allNotas;
+
+    const filterNotas = (status) => {
+      if (status === 'todas') {
+        notas = allNotas;
+      } else {
+        notas = allNotas.filter(nota => {
+          if (status === 'em_aberto') return nota.status === 'Em Aberto - Conferente';
+          if (status === 'rejeitadas') return nota.status === 'Rejeitada - CPD';
+          if (status === 'finalizadas') return nota.status === 'Finalizada';
+          return true;
+        });
+      }
+      renderNotas();
+    };
+
+    const renderNotas = () => {
+      notas.sort((a, b) => {
       if (a.perecivel === 'Sim' && b.perecivel !== 'Sim') return -1; // 'a' comes first
       if (a.perecivel !== 'Sim' && b.perecivel === 'Sim') return 1; // 'b' comes first
       return 0; // no change
@@ -22,6 +43,12 @@ export function renderConferente(db) {
     app.innerHTML = `
       <h2>Bem-vindo, ${userName}! (${userFuncao})</h2>
       <h2>Conferente - Notas Fiscais para Conferência</h2>
+      <div class="filter-buttons">
+        <button onclick="window.filterNotas('todas')">Todas as Notas</button>
+        <button onclick="window.filterNotas('em_aberto')">Notas em Aberto</button>
+        <button onclick="window.filterNotas('rejeitadas')">Notas Rejeitadas</button>
+        <button onclick="window.filterNotas('finalizadas')">Notas Finalizadas</button>
+      </div>
       <ul id="listaNotas">${notasHTML.length ? notasHTML : '<li>Não há notas pendentes no momento.</li>'}</ul>
       <div id="visualizacaoNota"></div>
       <button onclick="navigateTo('/login')">Voltar para Login</button>

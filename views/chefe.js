@@ -5,7 +5,23 @@ export function renderChefe(db) {
   const userName = window.currentUser ? window.currentUser.nome : 'Usuário';
   const userFuncao = window.currentUser ? window.currentUser.funcao : 'Chefe';
   
-  db.getAllNotas().then(notas => {
+  db.getAllNotas().then(allNotas => {
+    let notas = allNotas;
+    
+    const filterNotas = (status) => {
+      if (status === 'todas') {
+        notas = allNotas;
+      } else {
+        notas = allNotas.filter(nota => {
+          if (status === 'em_aberto') return nota.status.includes('Em Aberto');
+          if (status === 'rejeitadas') return nota.status.includes('Rejeitada');
+          if (status === 'finalizadas') return nota.status === 'Finalizada';
+          return true;
+        });
+      }
+      renderTable();
+    };
+
     const getUserName = async (cpf) => {
       if (!cpf) return 'N/A';
       try {
@@ -46,6 +62,12 @@ export function renderChefe(db) {
           <div>
             <h2>Bem-vindo, ${userName}! (${userFuncao})</h2>
             <h2>Chefe - Visão Geral das Notas Fiscais</h2>
+            <div class="filter-buttons">
+              <button onclick="window.filterNotas('todas')">Todas as Notas</button>
+              <button onclick="window.filterNotas('em_aberto')">Notas em Aberto</button>
+              <button onclick="window.filterNotas('rejeitadas')">Notas Rejeitadas</button>
+              <button onclick="window.filterNotas('finalizadas')">Notas Finalizadas</button>
+            </div>
           </div>
           <button onclick="window.location.href='/'" style="height: 40px; padding: 0 20px; cursor: pointer;">Voltar para Login</button>
         </div>

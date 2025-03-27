@@ -1,3 +1,22 @@
+
+.filter-buttons {
+  margin: 20px 0;
+}
+
+.filter-buttons button {
+  margin-right: 10px;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.filter-buttons button:hover {
+  background-color: #45a049;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
