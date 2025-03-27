@@ -91,6 +91,16 @@ export function renderLogin(db) {
 
     if (user) {
       window.currentUser = user; // Store user information globally
+      
+      const rolesRequiringPassword = ['cpd', 'conferente', 'chefe'];
+      
+      if (rolesRequiringPassword.includes(user.funcao)) {
+        const senha = prompt('Digite a senha para acessar:');
+        if (senha !== '1234') {
+          alert('Senha incorreta!');
+          return;
+        }
+      }
 
       alert(`Bem-vindo, ${user.nome}! (${user.funcao})`);
       // Redireciona com base na função do usuário
