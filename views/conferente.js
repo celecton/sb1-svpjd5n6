@@ -41,7 +41,7 @@ export function renderConferente(db) {
     <div class="filter-container">
       <select id="statusFilter">
         <option value="all">Todas as Notas</option>
-        <option value="aberto">Notas em Aberto</option>
+        <option value="aberto">Notas Em Aberto</option>
         <option value="rejeitado">Notas Rejeitadas</option>
         <option value="finalizado">Notas Finalizadas</option>
       </select>
