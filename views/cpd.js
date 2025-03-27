@@ -111,6 +111,16 @@ export function renderCPD(db) {
         <p><strong>Data de Cadastro:</strong> ${new Date(nota.timestampCadastro).toLocaleString()}</p>
         <p><strong>Status Atual:</strong> ${nota.status}</p>
         ${nota.observacaoCPD ? `<p><strong>Observação Anterior:</strong> ${nota.observacaoCPD}</p>` : ''}
+        <div>
+          <label for="alterarLoja">Alterar Loja:</label>
+          <select id="alterarLoja" onchange="alterarLojaDestino('${nota.id}', this.value)">
+            <option value="${nota.empresaDestino}" selected>${nota.empresaDestino}</option>
+            <option value="Loja 01 ST Sul">Loja 01 ST Sul</option>
+            <option value="Loja 02 Vila Verde">Loja 02 Vila Verde</option>
+            <option value="Loja 03 Formosinha">Loja 03 Formosinha</option>
+            <option value="Loja 04 JD Triangulo">Loja 04 JD Triangulo</option>
+          </select>
+        </div>
         <div id="notaControls">
           <label>
             <input type="radio" name="notaPronta" value="Sim" onchange="toggleObservacaoField(false)"> 
@@ -178,5 +188,15 @@ export function renderCPD(db) {
     }
 
     navigateTo('/cpd');
+  };
+
+  window.alterarLojaDestino = async (notaId, novaLoja) => {
+    try {
+      await db.updateNota(notaId, { empresaDestino: novaLoja });
+      alert('Loja alterada com sucesso!');
+      navigateTo('/cpd'); // or reload the page to reflect changes
+    } catch (error) {
+      alert('Erro ao alterar a loja: ' + error.message);
+    }
   };
 }

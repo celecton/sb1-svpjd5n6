@@ -26,7 +26,15 @@ export function renderChefe(db) {
         return `
           <tr>
             <td>${nota.id}</td>
-            <td>${nota.empresaDestino}</td>
+            <td>
+              <select onchange="alterarLojaDestino('${nota.id}', this.value)">
+                <option value="${nota.empresaDestino}" selected>${nota.empresaDestino}</option>
+                <option value="Loja 01 ST Sul">Loja 01 ST Sul</option>
+                <option value="Loja 02 Vila Verde">Loja 02 Vila Verde</option>
+                <option value="Loja 03 Formosinha">Loja 03 Formosinha</option>
+                <option value="Loja 04 JD Triangulo">Loja 04 JD Triangulo</option>
+              </select>
+            </td>
             <td>${nota.numeroNota}</td>
             <td>${nota.status}</td>
             <td>${new Date(nota.timestampCadastro).toLocaleString()}</td>
@@ -91,6 +99,20 @@ export function renderChefe(db) {
 
   // Initial render
   renderTable();
+
+  window.alterarLojaDestino = async (notaId, novaLoja) => {
+    if (confirm(`Deseja realmente alterar a loja destino para ${novaLoja}?`)) {
+      try {
+        await db.updateNota(notaId, {
+          empresaDestino: novaLoja
+        });
+        alert('Loja alterada com sucesso!');
+        renderTable();
+      } catch (error) {
+        alert('Erro ao alterar loja: ' + error.message);
+      }
+    }
+  };
 
   window.visualizarDetalhes = async (notaId) => {
     const nota = await db.getNota(notaId);
