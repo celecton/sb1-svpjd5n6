@@ -54,6 +54,25 @@ button:hover {
   background-color: #45a049;
 }
 
+.filter-container {
+  margin: 20px 0;
+  padding: 10px;
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container select {
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.filter-container button {
+  margin-left: 10px;
+}
+
 a {
   color: #4CAF50;
   text-decoration: none;
